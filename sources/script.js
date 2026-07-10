@@ -519,8 +519,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let seconds = 0;
     let isPlayingGame = false;
     let isSolved = false;
-    // We use Love/2.jpg (same as the puzzle preview from screenshot) or any photo
-    const imageUrl = 'Love/2.jpg'; 
+    // Use the uploaded photo for the puzzle
+    const imageUrl = 'Love/puzzle-bg.jpg'; 
 
     function initGame() {
         size = parseInt(diffSelect.value);
