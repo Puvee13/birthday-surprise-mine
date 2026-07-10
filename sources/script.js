@@ -245,10 +245,14 @@ document.addEventListener('DOMContentLoaded', () => {
             decorationStep++;
         } else if (decorationStep === 1) {
             // Step 2: Bring Cake
+            const page3 = document.getElementById('page-3');
+            page3.classList.add('cake-active');
 
-            // 1. Hide text/button immediately (opacity 0)
-            const centerContent = document.querySelector('#page-3 .center-content');
-            centerContent.classList.add('fade-out-content');
+            // Update header text, hide description & button
+            headerText.innerHTML = "Can You Handle This Surprise? 🎂";
+            headerText.style.color = '#FFFFFF';
+            document.querySelector('#page-3 .instruction-text').classList.add('hidden');
+            btnDecorate.classList.add('hidden');
 
             // 2. Show Cake
             cakeContainer.classList.remove('hidden');
@@ -259,11 +263,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 cakeContainer.classList.add('cake-exit');
             }, 8000);
 
-            // 4. Wait 10 seconds (Total) -> Show text/button, Change Button Text
+            // 4. Wait 10 seconds (Total) -> Show button, Change Button Text
             setTimeout(() => {
+                page3.classList.remove('cake-active');
                 btnDecorate.innerText = "FLY THE BALLOONS";
-                centerContent.classList.remove('fade-out-content');
-                centerContent.classList.add('fade-in-content');
+                btnDecorate.classList.remove('hidden');
 
                 // Hide cake container cleanly after it's gone
                 setTimeout(() => {
@@ -290,11 +294,14 @@ document.addEventListener('DOMContentLoaded', () => {
     function resetDecorationState() {
         decorationStep = 0;
         document.body.classList.remove('bg-dark-purple');
+        document.getElementById('page-3').classList.remove('cake-active');
 
         // Reset Text and Button
         headerText.style.color = ''; // Reset to default (was white)
         headerText.innerHTML = 'Let\'s Celebrate 🎂';
         btnDecorate.innerText = "TURN ON THE LIGHTS";
+        btnDecorate.classList.remove('hidden');
+        document.querySelector('#page-3 .instruction-text').classList.remove('hidden');
 
         // Hide Elements
         bulbsContainer.classList.add('hidden');
