@@ -58,26 +58,45 @@
 
     <!-- PAGE 1.5: CAKE & CANDLE -->
     <section id="page-cake" class="page">
-        <div class="center-content glass-panel">
-            <h2 class="title-birthday" style="font-size: 2.2rem; margin-bottom: 20px;">Make a Wish! 🎂</h2>
-            <p class="romantic-msg" style="margin-bottom: 30px;">
-                Close your eyes, make a wish, and gently blow on your phone's microphone to extinguish the candle!
+        <div class="center-content" style="gap: 15px; max-width: 500px; width: 100%;">
+            <h2 class="title-birthday" style="font-size: 2rem; margin-bottom: 0;">Make a Wish! 🎂</h2>
+            <p class="romantic-msg" style="margin: 0; font-size: 0.95rem;">
+                Close your eyes, make a wish, and gently blow into your phone's microphone!
             </p>
-            
-            <div class="cake-container">
-                <div class="cake">
-                    <div class="tier top-tier"></div>
-                    <div class="tier bottom-tier"></div>
-                    <div class="candle">
-                        <div id="flame" class="flame"></div>
-                    </div>
+
+            <!-- Chocolate Cake -->
+            <div class="choco-cake-wrap">
+                <!-- Birthday text on top -->
+                <div class="cake-name-tag">Happy Birthday Sinthu</div>
+
+                <!-- Top tier -->
+                <div class="choco-tier choco-top">
+                    <div class="choco-frosting choco-frosting-top"></div>
+                    <div class="choco-drip cd1"></div>
+                    <div class="choco-drip cd2"></div>
+                    <div class="choco-sprinkles">🍫 🎀 🍫</div>
                 </div>
+
+                <!-- Bottom tier -->
+                <div class="choco-tier choco-bottom">
+                    <div class="choco-frosting choco-frosting-bottom"></div>
+                    <div class="choco-drip cd3"></div>
+                    <div class="choco-drip cd4"></div>
+                    <div class="choco-drip cd5"></div>
+                </div>
+
+                <!-- Candle -->
+                <div class="choco-candle">
+                    <div id="flame" class="flame"></div>
+                </div>
+
+                <!-- Plate -->
+                <div class="choco-plate"></div>
             </div>
 
-            <button id="btn-start-mic" class="btn-primary" style="margin-top: 40px;">TAP TO GET READY 🎤</button>
-            <p id="mic-status" style="margin-top: 15px; font-weight: bold; color: #d81b60;"></p>
-            
-            <button id="btn-cake-next" class="btn-primary hidden" style="margin-top: 30px;">CONTINUE ✨</button>
+            <button id="btn-start-mic" class="btn-primary">TAP TO GET READY 🎤</button>
+            <p id="mic-status" style="font-weight: bold; color: #d81b60; min-height: 24px;"></p>
+            <button id="btn-cake-next" class="btn-primary hidden">CONTINUE ✨</button>
         </div>
     </section>
 
@@ -124,7 +143,7 @@
             <div id="banners" class="banners hidden"></div>
         </div>
 
-        <div class="cake-container hidden" id="cake-container">
+        <div class="cake-container hidden" id="cake-container" style="position: relative; top: auto; left: auto; transform: none; margin: 20px auto 0; z-index: 20;">
             <div class="css-cake">
                 <div class="plate"></div>
                 <div class="layer layer-bottom"></div>
@@ -143,7 +162,7 @@
         <div class="balloons-container" id="balloons-container"></div>
 
         <div class="center-content relative-z">
-            <h2 class="decorate-header title-birthday" style="font-size: 2.5rem;">Let's Celebrate 🎂</h2>
+            <h2 class="decorate-header title-birthday" style="font-size: 2.5rem;">Can You Handle This Surprise? 🎂</h2>
             <p class="instruction-text" style="background: rgba(0,0,0,0.1); padding: 5px 15px; border-radius: 15px;">
                 Click the Button to Decorate</p>
             <button id="btn-decorate" class="btn-yellow">TURN ON THE LIGHTS</button>
