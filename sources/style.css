@@ -867,3 +867,221 @@ button:hover {
     10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
     20%, 40%, 60%, 80% { transform: translateX(5px); }
 }
+
+/* ========================================================
+   PAGE 6: BIRTHDAY BASH (SLIDING PUZZLE)
+   ======================================================== */
+.game-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.game-title {
+    font-family: var(--font-heading);
+    font-size: 2.8rem;
+    color: #e91e63;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 10px;
+}
+
+.game-hud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.7);
+    padding: 15px 25px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    width: 100%;
+}
+
+.difficulty-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+}
+
+#difficulty {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    outline: none;
+    cursor: pointer;
+}
+
+.stats-wrapper {
+    display: flex;
+    gap: 15px;
+}
+
+.hud-box {
+    background: white;
+    padding: 8px 15px;
+    border-radius: 8px;
+    text-align: center;
+    min-width: 70px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.hud-box small {
+    font-size: 0.8rem;
+    color: #666;
+    display: block;
+    margin-bottom: 2px;
+}
+
+.hud-box div {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #e91e63;
+}
+
+.game-controls {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-game-primary, .btn-game-secondary {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-game-primary {
+    background: #e91e63;
+    color: white;
+}
+.btn-game-primary:hover {
+    background: #c2185b;
+}
+
+.btn-game-secondary {
+    background: #4dd0e1;
+    color: white;
+}
+.btn-game-secondary:hover {
+    background: #00acc1;
+}
+
+.game-layout {
+    display: flex;
+    gap: 40px;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.board-wrapper {
+    position: relative;
+    background: white;
+    padding: 10px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+#puzzle-board {
+    display: grid;
+    gap: 2px;
+    background: #ddd;
+    width: 300px;
+    height: 300px;
+    position: relative;
+    overflow: hidden;
+}
+
+.puzzle-tile {
+    width: 100%;
+    height: 100%;
+    background-size: 300px 300px; /* matched to board size */
+    background-repeat: no-repeat;
+    cursor: pointer;
+    transition: transform 0.2s ease-out;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.2);
+}
+
+.puzzle-tile.empty {
+    background: transparent;
+    cursor: default;
+    box-shadow: none;
+}
+
+.preview-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.preview-wrapper h4 {
+    color: #555;
+}
+
+#solution-preview {
+    width: 150px;
+    height: 150px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    border: 3px solid white;
+}
+
+#win-message {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    border-radius: 8px;
+    animation: fadeIn 0.5s;
+    text-align: center;
+}
+
+#win-message h3 {
+    color: #e91e63;
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+#win-message p {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+}
+
+/* Mobile specific styling for puzzle */
+@media (max-width: 600px) {
+    #puzzle-board {
+        width: 280px;
+        height: 280px;
+    }
+    .puzzle-tile {
+        background-size: 280px 280px;
+    }
+    .game-layout {
+        gap: 20px;
+    }
+    .game-hud {
+        flex-direction: column;
+    }
+    .stats-wrapper {
+        width: 100%;
+        justify-content: center;
+    }
+}

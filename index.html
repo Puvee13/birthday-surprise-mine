@@ -203,6 +203,57 @@
                     Husband,Mr.Puveesan
                 </h2>
                 <p style="margin-top: 10px; font-weight: bold;">Once again WISHING YOU A HAPPIEST BIRTHDAY MAH....!</p>
+                <button id="btn-play-game" class="btn-primary margin-top" style="margin-top: 30px;" onclick="goToPage(6)">LET'S PLAY A GAME 🧩</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- PAGE 6: PUZZLE GAME -->
+    <section id="page-6" class="page hidden" style="background-color: #fcf6f9;">
+        <button class="btn-back" onclick="goBack(6)">BACK</button>
+        <button class="btn-back btn-home-page" onclick="goToPage(1)">HOME</button>
+        <div class="heart-bg"></div>
+        <div class="game-container">
+            <h2 class="game-title">🎂 Birthday Bash</h2>
+            
+            <div class="game-hud">
+                <div class="difficulty-wrapper">
+                    <label for="difficulty">Difficulty:</label>
+                    <select id="difficulty">
+                        <option value="3">Easy (3x3)</option>
+                        <option value="4">Medium (4x4)</option>
+                        <option value="5">Hard (5x5)</option>
+                    </select>
+                </div>
+                <div class="stats-wrapper">
+                    <div class="hud-box">
+                        <small>Time:</small>
+                        <div id="game-time">0:00</div>
+                    </div>
+                    <div class="hud-box">
+                        <small>Moves:</small>
+                        <div id="game-moves">0</div>
+                    </div>
+                </div>
+                <div class="game-controls">
+                    <button id="btn-new-game" class="btn-game-primary">New Game</button>
+                    <button id="btn-show-solution" class="btn-game-secondary">Show Solution</button>
+                </div>
+            </div>
+
+            <div class="game-layout">
+                <div class="board-wrapper">
+                    <div id="puzzle-board"></div>
+                    <div id="win-message" class="hidden">
+                        <h3>You did it! 🎉</h3>
+                        <p>Time: <span id="win-time"></span> | Moves: <span id="win-moves"></span></p>
+                        <button id="btn-play-again" class="btn-game-primary margin-top">Play Again</button>
+                    </div>
+                </div>
+                <div class="preview-wrapper">
+                    <h4>Solution Preview:</h4>
+                    <div id="solution-preview"></div>
+                </div>
             </div>
         </div>
     </section>

@@ -437,4 +437,226 @@ document.addEventListener('DOMContentLoaded', () => {
         const colors = ['#FFEB3B', '#FF4081', '#E040FB', '#536DFE', '#69F0AE'];
         return colors[Math.floor(Math.random() * colors.length)];
     }
+
+    // ========================================================
+    // GAME LOGIC: Sliding Puzzle
+    // ========================================================
+    const board = document.getElementById('puzzle-board');
+    const preview = document.getElementById('solution-preview');
+    const diffSelect = document.getElementById('difficulty');
+    const timeDisplay = document.getElementById('game-time');
+    const movesDisplay = document.getElementById('game-moves');
+    const btnNewGame = document.getElementById('btn-new-game');
+    const btnShowSolution = document.getElementById('btn-show-solution');
+    const winMessage = document.getElementById('win-message');
+    const winTime = document.getElementById('win-time');
+    const winMoves = document.getElementById('win-moves');
+    const btnPlayAgain = document.getElementById('btn-play-again');
+
+    let size = 3;
+    let tiles = [];
+    let emptyIndex = size * size - 1;
+    let moves = 0;
+    let timer;
+    let seconds = 0;
+    let isPlayingGame = false;
+    let isSolved = false;
+    // We use Love/2.jpg (same as the puzzle preview from screenshot) or any photo
+    const imageUrl = 'Love/2.jpg'; 
+
+    function initGame() {
+        size = parseInt(diffSelect.value);
+        board.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+        board.style.gridTemplateRows = `repeat(${size}, 1fr)`;
+        preview.style.backgroundImage = `url('${imageUrl}')`;
+        winMessage.classList.add('hidden');
+        isSolved = false;
+
+        createTiles();
+        shuffleTiles();
+        renderTiles();
+        resetStats();
+        startTimer();
+    }
+
+    function createTiles() {
+        tiles = [];
+        const totalTiles = size * size;
+        for (let i = 0; i < totalTiles; i++) {
+            tiles.push(i);
+        }
+        emptyIndex = totalTiles - 1;
+    }
+
+    function shuffleTiles() {
+        // Shuffle by making valid random moves to ensure solvability
+        const shuffleMoves = size * size * 15;
+        let lastMove = -1;
+        for (let i = 0; i < shuffleMoves; i++) {
+            const validMoves = getValidMoves(emptyIndex);
+            // Try not to immediately undo the last move for a better shuffle
+            const possibleMoves = validMoves.filter(m => m !== lastMove);
+            const move = possibleMoves.length > 0 ? 
+                         possibleMoves[Math.floor(Math.random() * possibleMoves.length)] : 
+                         validMoves[Math.floor(Math.random() * validMoves.length)];
+            
+            swapTiles(emptyIndex, move);
+            lastMove = emptyIndex;
+            emptyIndex = move;
+        }
+        // If it accidentally solved itself during shuffle, shuffle again
+        if (checkWinCondition()) shuffleTiles();
+    }
+
+    function getValidMoves(index) {
+        const valid = [];
+        const row = Math.floor(index / size);
+        const col = index % size;
+
+        if (row > 0) valid.push(index - size); // up
+        if (row < size - 1) valid.push(index + size); // down
+        if (col > 0) valid.push(index - 1); // left
+        if (col < size - 1) valid.push(index + 1); // right
+
+        return valid;
+    }
+
+    function swapTiles(i, j) {
+        const temp = tiles[i];
+        tiles[i] = tiles[j];
+        tiles[j] = temp;
+    }
+
+    function renderTiles() {
+        board.innerHTML = '';
+        tiles.forEach((tileValue, index) => {
+            const tile = document.createElement('div');
+            tile.classList.add('puzzle-tile');
+            
+            if (tileValue === size * size - 1) {
+                tile.classList.add('empty');
+                emptyIndex = index;
+            } else {
+                tile.style.backgroundImage = `url('${imageUrl}')`;
+                const bgCol = tileValue % size;
+                const bgRow = Math.floor(tileValue / size);
+                
+                // Calculate percentage position for background
+                const posPercentX = size > 1 ? (bgCol / (size - 1)) * 100 : 0;
+                const posPercentY = size > 1 ? (bgRow / (size - 1)) * 100 : 0;
+                
+                tile.style.backgroundPosition = `${posPercentX}% ${posPercentY}%`;
+                tile.style.backgroundSize = `${size * 100}% ${size * 100}%`;
+            }
+
+            tile.addEventListener('click', () => handleTileClick(index));
+            board.appendChild(tile);
+        });
+    }
+
+    function handleTileClick(index) {
+        if (isSolved) return;
+
+        const validMoves = getValidMoves(emptyIndex);
+        if (validMoves.includes(index)) {
+            swapTiles(emptyIndex, index);
+            emptyIndex = index;
+            moves++;
+            movesDisplay.innerText = moves;
+            renderTiles();
+            
+            if (checkWinCondition()) {
+                handleWin();
+            }
+        }
+    }
+
+    function checkWinCondition() {
+        for (let i = 0; i < tiles.length; i++) {
+            if (tiles[i] !== i) return false;
+        }
+        return true;
+    }
+
+    function handleWin() {
+        isSolved = true;
+        clearInterval(timer);
+        isPlayingGame = false;
+        
+        // Fill in the empty tile for a complete picture
+        const emptyEl = board.querySelector('.empty');
+        if (emptyEl) {
+            emptyEl.classList.remove('empty');
+            emptyEl.style.backgroundImage = `url('${imageUrl}')`;
+            const tileValue = size * size - 1;
+            const bgCol = tileValue % size;
+            const bgRow = Math.floor(tileValue / size);
+            const posPercentX = size > 1 ? (bgCol / (size - 1)) * 100 : 0;
+            const posPercentY = size > 1 ? (bgRow / (size - 1)) * 100 : 0;
+            emptyEl.style.backgroundPosition = `${posPercentX}% ${posPercentY}%`;
+            emptyEl.style.backgroundSize = `${size * 100}% ${size * 100}%`;
+        }
+
+        winTime.innerText = timeDisplay.innerText;
+        winMoves.innerText = moves;
+        winMessage.classList.remove('hidden');
+        createConfetti();
+    }
+
+    function resetStats() {
+        moves = 0;
+        seconds = 0;
+        movesDisplay.innerText = moves;
+        timeDisplay.innerText = '0:00';
+    }
+
+    function startTimer() {
+        clearInterval(timer);
+        isPlayingGame = true;
+        timer = setInterval(() => {
+            if (isPlayingGame) {
+                seconds++;
+                const m = Math.floor(seconds / 60);
+                const s = seconds % 60;
+                timeDisplay.innerText = `${m}:${s.toString().padStart(2, '0')}`;
+            }
+        }, 1000);
+    }
+
+    function solvePuzzle() {
+        if (isSolved) return;
+        tiles.sort((a, b) => a - b);
+        emptyIndex = size * size - 1;
+        renderTiles();
+        handleWin();
+    }
+
+    btnNewGame.addEventListener('click', initGame);
+    btnShowSolution.addEventListener('click', solvePuzzle);
+    btnPlayAgain.addEventListener('click', initGame);
+    diffSelect.addEventListener('change', initGame);
+
+    // Override goToPage to hook puzzle initialization when visiting page 6
+    const originalGoToPage = window.goToPage;
+    window.goToPage = function(pageNum) {
+        if (originalGoToPage) originalGoToPage(pageNum);
+        else {
+            // Fallback if originalGoToPage isn't available (it should be defined earlier in script)
+            document.querySelectorAll('.page').forEach(page => page.classList.add('hidden'));
+            const target = document.getElementById(`page-${pageNum}`);
+            if (target) target.classList.remove('hidden');
+            currentPage = pageNum;
+            window.scrollTo(0, 0);
+        }
+
+        if (pageNum === 6) {
+            // Initialize if not already playing
+            if (!isPlayingGame && moves === 0) {
+                initGame();
+            }
+        } else {
+            // Pause timer if leaving page 6
+            isPlayingGame = false;
+        }
+    };
 });
