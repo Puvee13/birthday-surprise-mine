@@ -293,13 +293,10 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (decorationStep === 1) {
             // Step 2: Bring Cake
             const page3 = document.getElementById('page-3');
-            page3.classList.add('cake-active');
-
-            // Update header text, hide description & button
-            headerText.innerHTML = "Can You Handle This Surprise? 🎂";
-            headerText.style.color = '#FFFFFF';
-            document.querySelector('#page-3 .instruction-text').classList.add('hidden');
-            btnDecorate.classList.add('hidden');
+            const centerContent = document.querySelector('#page-3 .center-content');
+            
+            // 1. Hide the entire center content (header, description, and button)
+            centerContent.classList.add('fade-out-content');
 
             // 2. Show Cake
             cakeContainer.classList.remove('hidden');
@@ -310,11 +307,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 cakeContainer.classList.add('cake-exit');
             }, 8000);
 
-            // 4. Wait 10 seconds (Total) -> Show button, Change Button Text
+            // 4. Wait 10 seconds (Total) -> Show button, Change Button Text, Restore Header to default
             setTimeout(() => {
-                page3.classList.remove('cake-active');
+                headerText.innerHTML = "Let's Celebrate 🎂";
+                headerText.style.color = '#FFFFFF';
                 btnDecorate.innerText = "FLY THE BALLOONS";
-                btnDecorate.classList.remove('hidden');
+                
+                centerContent.classList.remove('fade-out-content');
+                centerContent.classList.add('fade-in-content');
 
                 // Hide cake container cleanly after it's gone
                 setTimeout(() => {
