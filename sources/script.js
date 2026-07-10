@@ -382,12 +382,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 activePage = p;
                 p.style.opacity = 0;
                 p.classList.remove('active');
+                p.classList.add('hidden'); // properly hide inactive pages
             }
         });
 
         const showTarget = () => {
             const target = document.getElementById(`page-${pageNum}`);
             if (target) {
+                target.classList.remove('hidden'); // ensure page is visible
                 target.style.display = 'flex';
                 // Force reflow
                 void target.offsetWidth;
@@ -398,32 +400,38 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (pageNum === 5) {
                     const frames = target.querySelectorAll('.frame');
                     frames.forEach((frame, index) => {
-                        // Reset if already there
                         frame.classList.remove('gallery-animate');
                         frame.style.animationDelay = '';
-
-                        // Force reflow to restart animation
                         void frame.offsetWidth;
-
                         frame.style.animationDelay = (index * 0.1) + 's';
                         frame.classList.add('gallery-animate');
                     });
+                }
+
+                // Puzzle game initialization hook
+                if (pageNum === 6) {
+                    if (typeof initGame === 'function' && !isPlayingGame && moves === 0) {
+                        initGame();
+                    }
+                } else if (typeof isPlayingGame !== 'undefined') {
+                    isPlayingGame = false;
                 }
             }
             currentPage = pageNum;
         };
 
         if (activePage) {
-            // Wait for exit transition
             setTimeout(() => {
                 activePage.style.display = 'none';
                 showTarget();
             }, 800);
         } else {
-            // No active page (initial load), show immediately
             showTarget();
         }
     }
+
+    // Expose goToPage to global scope so HTML onclick handlers work
+    window.goToPage = goToPage;
 
     function animateOut(element, callback) {
         element.classList.add('exit-up');
@@ -693,28 +701,4 @@ document.addEventListener('DOMContentLoaded', () => {
     btnShowSolution.addEventListener('click', solvePuzzle);
     btnPlayAgain.addEventListener('click', initGame);
     diffSelect.addEventListener('change', initGame);
-
-    // Override goToPage to hook puzzle initialization when visiting page 6
-    const originalGoToPage = window.goToPage;
-    window.goToPage = function(pageNum) {
-        if (originalGoToPage) originalGoToPage(pageNum);
-        else {
-            // Fallback if originalGoToPage isn't available (it should be defined earlier in script)
-            document.querySelectorAll('.page').forEach(page => page.classList.add('hidden'));
-            const target = document.getElementById(`page-${pageNum}`);
-            if (target) target.classList.remove('hidden');
-            currentPage = pageNum;
-            window.scrollTo(0, 0);
-        }
-
-        if (pageNum === 6) {
-            // Initialize if not already playing
-            if (!isPlayingGame && moves === 0) {
-                initGame();
-            }
-        } else {
-            // Pause timer if leaving page 6
-            isPlayingGame = false;
-        }
-    };
 });
