@@ -161,21 +161,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
             scriptProcessor.onaudioprocess = function() {
                 if (candleBlown) return;
-                const array = new Uint8Array(analyser.frequencyBinCount);
-                analyser.getByteFrequencyData(array);
+                
+                // 1. Calculate Volume (RMS) from Time Domain
+                let rms = 0;
+                if (analyser.getFloatTimeDomainData) {
+                    const timeData = new Float32Array(analyser.fftSize);
+                    analyser.getFloatTimeDomainData(timeData);
+                    let sumSquares = 0;
+                    for (let i = 0; i < timeData.length; i++) {
+                        sumSquares += timeData[i] * timeData[i];
+                    }
+                    rms = Math.sqrt(sumSquares / timeData.length);
+                } else {
+                    const timeData = new Uint8Array(analyser.fftSize);
+                    analyser.getByteTimeDomainData(timeData);
+                    let sumSquares = 0;
+                    for (let i = 0; i < timeData.length; i++) {
+                        const normalized = (timeData[i] - 128) / 128;
+                        sumSquares += normalized * normalized;
+                    }
+                    rms = Math.sqrt(sumSquares / timeData.length);
+                }
 
-                // Blow detection focuses on low frequencies (wind rumble, usually < 250Hz)
-                // 512 FFT size means 256 bins. At 44.1kHz, each bin is ~86Hz.
-                // Bins 0, 1, 2 represent the lowest frequencies (0Hz to 258Hz).
+                // 2. Calculate Low-Frequency wind rumble (usually below 250Hz)
+                const freqData = new Uint8Array(analyser.frequencyBinCount);
+                analyser.getByteFrequencyData(freqData);
                 let lowFreqSum = 0;
-                const binRange = Math.min(3, array.length);
+                const binRange = Math.min(3, freqData.length); // Bins 0, 1, 2 (0Hz to ~258Hz)
                 for (let i = 0; i < binRange; i++) {
-                    lowFreqSum += array[i];
+                    lowFreqSum += freqData[i];
                 }
                 const lowFreqAverage = lowFreqSum / binRange;
 
-                // Threshold: wind/blowing creates heavy low-end rumble (usually > 60-70)
-                if (lowFreqAverage > 65) { 
+                // 3. Strict Threshold check: Must be loud (RMS > 0.15) AND have blowing rumble (average > 70)
+                if (rms > 0.15 && lowFreqAverage > 70) { 
                     blowOutCandle();
                     cleanupAudio();
                 }
