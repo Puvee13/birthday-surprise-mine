@@ -376,61 +376,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Helpers ---
     function goToPage(pageNum) {
-        let activePage = null;
+        // Hide all pages
         document.querySelectorAll('.page').forEach(p => {
-            if (p.classList.contains('active')) {
-                activePage = p;
-                p.style.opacity = 0;
-                p.classList.remove('active');
-                p.classList.add('hidden'); // properly hide inactive pages
-            }
+            p.classList.remove('active');
         });
 
-        const showTarget = () => {
-            const target = document.getElementById(`page-${pageNum}`);
-            if (target) {
-                target.classList.remove('hidden'); // ensure page is visible
-                target.style.display = 'flex';
-                // Force reflow
-                void target.offsetWidth;
-                target.classList.add('active');
-                target.style.opacity = 1;
+        // Show target page
+        const target = document.getElementById('page-' + pageNum);
+        if (target) {
+            target.classList.add('active');
+            target.scrollTop = 0; // scroll to top when entering a page
 
-                // Trigger Page 5 Gallery Animations
-                if (pageNum === 5) {
-                    const frames = target.querySelectorAll('.frame');
-                    frames.forEach((frame, index) => {
-                        frame.classList.remove('gallery-animate');
-                        frame.style.animationDelay = '';
-                        void frame.offsetWidth;
-                        frame.style.animationDelay = (index * 0.1) + 's';
-                        frame.classList.add('gallery-animate');
-                    });
-                }
-
-                // Puzzle game initialization hook
-                if (pageNum === 6) {
-                    if (typeof initGame === 'function' && !isPlayingGame && moves === 0) {
-                        initGame();
-                    }
-                } else if (typeof isPlayingGame !== 'undefined') {
-                    isPlayingGame = false;
-                }
+            // Trigger Page 5 Gallery Animations
+            if (pageNum === 5) {
+                const frames = target.querySelectorAll('.frame');
+                frames.forEach((frame, index) => {
+                    frame.classList.remove('gallery-animate');
+                    frame.style.animationDelay = '';
+                    void frame.offsetWidth;
+                    frame.style.animationDelay = (index * 0.1) + 's';
+                    frame.classList.add('gallery-animate');
+                });
             }
-            currentPage = pageNum;
-        };
 
-        if (activePage) {
-            setTimeout(() => {
-                activePage.style.display = 'none';
-                showTarget();
-            }, 800);
-        } else {
-            showTarget();
+            // Puzzle game initialization hook
+            if (pageNum === 6) {
+                if (typeof initGame === 'function' && !isPlayingGame && moves === 0) {
+                    initGame();
+                }
+            } else {
+                if (typeof isPlayingGame !== 'undefined') isPlayingGame = false;
+            }
         }
+
+        currentPage = pageNum;
     }
 
-    // Expose goToPage to global scope so HTML onclick handlers work
+    // Expose goToPage to global scope so HTML onclick="goToPage(...)" works
     window.goToPage = goToPage;
 
     function animateOut(element, callback) {
