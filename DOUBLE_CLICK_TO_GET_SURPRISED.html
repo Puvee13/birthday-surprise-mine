@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Happy Birthday Mine Kty Mah!</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Indie+Flower&family=Inter:wght@400;600&family=Outfit:wght@500;700;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="sources/style.css">
+</head>
+
+<body>
+
+    <audio id="bg-music" loop>
+        <source src="Love/Dheema (From _Love Insurance Kompany_)(MP3_320K).mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <button id="music-toggle" class="music-btn">PLAY MUSIC 🎶</button>
+
+    <!-- PAGE 0: PASSCODE LOCK -->
+    <section id="page-0" class="page active">
+        <div class="center-content glass-panel passcode-container">
+            <h2 class="passcode-title">Unlock The Magic 💖</h2>
+            <p class="passcode-hint">Enter the special passcode to begin your surprise</p>
+            <div class="passcode-input-wrapper">
+                <input type="password" id="passcode-input" class="passcode-field" placeholder="••••" maxlength="12"
+                    autofocus>
+            </div>
+            <button id="btn-unlock" class="btn-primary">UNLOCK ❤️</button>
+            <p id="passcode-error" class="error-msg hidden">That's not the key to my heart... Try again! 🥰</p>
+        </div>
+    </section>
+
+    <!-- PAGE 1: LANDING -->
+    <section id="page-1" class="page">
+        <div class="center-content glass-panel">
+            <h1 class="title-birthday">HAPPY BIRTHDAY <br> <span class="name-gradient">Mine Kty Mah</span></h1>
+            <p class="romantic-msg">
+                In Every Heartbeat, I Feel Your Love Echoing Back To Me.<br>
+                Distance Is Just A Number To Check How Far Our Love Can Travel.
+            </p>
+
+            <div class="birthday-subtitle-container">
+                <h2 class="subtitle-birthday">IT'S YOUR 21<sup>st</sup>BIRTHDAY 🎂🎈💞🎁</h2>
+            </div>
+
+            <p class="small-magical-text">✨ Something Magical Is About To Unfold ✨</p>
+
+            <button id="btn-lets-celebrate" class="btn-primary">LET'S CELEBRATE</button>
+        </div>
+    </section>
+
+    <!-- PAGE 2: THE MAGIC BOX -->
+    <section id="page-2" class="page">
+        <button class="btn-back" onclick="goBack(2)">BACK</button>
+        <div class="heart-bg"></div>
+        <div id="magic-box-container" class="center-content">
+            <div id="magic-box-content" class="magic-box">
+                <!-- State 1: Spark -->
+                <div class="box-state" id="box-state-1">
+                    <div class="spark-anim">✨</div>
+                    <h3 class="box-text" style="font-size: 1.5rem; margin: 15px 0;">It's Your Special Day Ammuuu....
+                    </h3>
+                    <button id="btn-box-next" class="btn-primary">NEXT</button>
+                </div>
+
+                <!-- State 2: Heart & Question -->
+                <div class="box-state hidden" id="box-state-2">
+                    <div class="heart-anim">💙</div>
+                    <p class="box-text" style="font-size: 1.2rem; font-weight: bold;">Do you want to see what I made ??
+                    </p>
+                    <div class="btn-group">
+                        <button id="btn-box-yes" class="btn-primary">YES</button>
+                        <button id="btn-box-no" class="btn-secondary">NO</button>
+                    </div>
+                </div>
+
+                <!-- State 3: Monkey & Final -->
+                <div class="box-state hidden" id="box-state-3">
+                    <div class="monkey-anim">🙈</div>
+                    <p class="box-text" style="font-size: 1.2rem;">Have a look at it Kullachii🤭!!</p>
+                    <button id="btn-box-go" class="btn-primary" style="margin-top: 30px;">Let's Go!</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PAGE 3: THE DECORATION -->
+    <section id="page-3" class="page">
+        <button class="btn-back" onclick="goBack(3)">BACK</button>
+        <div class="decorations-container">
+            <div id="light-bulbs" class="bulbs hidden"></div>
+            <div id="banners" class="banners hidden"></div>
+        </div>
+
+        <div class="cake-container hidden" id="cake-container">
+            <div class="css-cake">
+                <div class="plate"></div>
+                <div class="layer layer-bottom"></div>
+                <div class="layer layer-middle"></div>
+                <div class="layer layer-top"></div>
+                <div class="icing"></div>
+                <div class="drip drip1"></div>
+                <div class="drip drip2"></div>
+                <div class="drip drip3"></div>
+                <div class="candle">
+                    <div class="flame"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="balloons-container" id="balloons-container"></div>
+
+        <div class="center-content relative-z">
+            <h2 class="decorate-header title-birthday" style="font-size: 2.5rem;">Let's Celebrate 🎂</h2>
+            <p class="instruction-text" style="background: rgba(0,0,0,0.1); padding: 5px 15px; border-radius: 15px;">
+                Click the Button to Decorate</p>
+            <button id="btn-decorate" class="btn-yellow">TURN ON THE LIGHTS</button>
+        </div>
+    </section>
+
+    <!-- PAGE 4: LETTER -->
+    <section id="page-4" class="page">
+        <button class="btn-back" onclick="goBack(4)">BACK</button>
+        <div class="heart-bg"></div>
+        <div class="center-content">
+            <div class="floating-header"
+                style="font-family: 'Times New Roman', serif; font-size: 2rem; color: #d81b60;">
+                A MESSAGE FROM MY HEART!! 💙
+            </div>
+
+            <div class="auditorium-screen">
+                <div id="screen-cover" class="screen-cover">
+                    <button id="btn-open-letter" class="btn-white-text-pink" style="box-shadow: 0 0 20px white;">CLICK
+                        ME TO SEE!</button>
+                </div>
+                <div id="letter-content" class="letter-content hidden">
+                    <h3>Dear MINEEE....</h3>
+                    <p class="letter-body">
+                        Wish You Happy Birthday My Heart....😘🌍💙 May Your Special Day Be Filled With Love, Joy, And
+                        All The Happiness You Deserve🥰😇. Thank You For Being My Partner, My Best Friend, And My
+                        Greatest Blessing. I Am So Lucky To Have You In My Life. Love You Forever💙😘. I Promise I Will
+                        Do My Best To Make You As Most Happiest Women In This World 🫂😚🫳🏻.
+                    </p>
+                    <p class="letter-footer" style="margin-top: 20px; text-align: right;">
+                        Thank-You<br>
+                        <strong style="font-family: 'Great Vibes'; font-size: 1.5rem;">With love,<br> Your's
+                            Puvee..🥰</strong>
+                    </p>
+                </div>
+            </div>
+
+            <button id="btn-memories" class="btn-primary margin-top">CLICK HERE TO SEE OUR MEMORIES</button>
+        </div>
+    </section>
+
+    <!-- PAGE 5: MEMORY GALLERY -->
+    <section id="page-5" class="page">
+        <button class="btn-back" onclick="goBack(5)">BACK</button>
+        <button id="btn-go-home" class="btn-back btn-home-page">GO TO 1 ST PAGE</button>
+        <div class="heart-bg"></div>
+        <div class="gallery-container">
+            <br><br>
+            <h2
+                style="text-align: center; font-family: 'Great Vibes'; font-size: 3rem; margin-bottom: 20px; color: #d81b60;">
+                Our Beautiful Memories😇</h2>
+            <!-- 12 Images Grid -->
+            <div class="memory-grid">
+                <div class="frame"><img src="Love/1.jpg" alt="img-1" loading="lazy"
+                        onerror="this.src='https://placehold.co/300x400/ffb6c1/8b0000?text=Memory+1'"></div>
+                <div class="frame"><img src="Love/2.jpg" alt="img-2" loading="lazy"
+                        onerror="this.src='https://placehold.co/300x400/ffb6c1/8b0000?text=Memory+2'"></div>
+                <div class="frame"><img src="Love/3.jpg" alt="img-3" loading="lazy"
+                        onerror="this.src='https://placehold.co/300x400/ffb6c1/8b0000?text=Memory+3'"></div>
+                <div class="frame"><img src="Love/4.jpg" alt="img-4" loading="lazy"
+                        onerror="this.src='https://placehold.co/300x400/ffb6c1/8b0000?text=Memory+4'"></div>
+                <div class="frame"><img src="Love/5.jpg" alt="img-5" loading="lazy"
+                        onerror="this.src='https://placehold.co/300x400/ffb6c1/8b0000?text=Memory+5'"></div>
+                <div class="frame"><img src="Love/6.jpg" alt="img-6" loading="lazy"
+                        onerror="this.src='https://placehold.co/300x400/ffb6c1/8b0000?text=Memory+6'"></div>
+                <div class="frame"><img src="Love/7.jpg" alt="img-7" loading="lazy"
+                        onerror="this.src='https://placehold.co/300x400/ffb6c1/8b0000?text=Memory+7'"></div>
+                <div class="frame"><img src="Love/8.jpg" alt="img-8" loading="lazy"
+                        onerror="this.src='https://placehold.co/300x400/ffb6c1/8b0000?text=Memory+8'"></div>
+                <div class="frame"><img src="Love/9.jpg" alt="img-9" loading="lazy"
+                        onerror="this.src='https://placehold.co/300x400/ffb6c1/8b0000?text=Memory+9'"></div>
+                <div class="frame"><img src="Love/10.jpg" alt="img-10" loading="lazy"
+                        onerror="this.src='https://placehold.co/300x400/ffb6c1/8b0000?text=Memory+10'"></div>
+                <div class="frame"><img src="Love/11.jpg" alt="img-11" loading="lazy"
+                        onerror="this.src='https://placehold.co/300x400/ffb6c1/8b0000?text=Memory+11'"></div>
+                <div class="frame"><img src="Love/12.jpg" alt="img-12" loading="lazy"
+                        onerror="this.src='https://placehold.co/300x400/ffb6c1/8b0000?text=Memory+12'"></div>
+            </div>
+
+            <div class="final-footer"><br><br><br>
+                <h2 style="font-family: 'Times New Roman', serif; font-size: 2.5rem;">FOREVER YOURS - Lovely
+                    Husband,Mr.Puveesan
+                </h2>
+                <p style="margin-top: 10px; font-weight: bold;">Once again WISHING YOU A HAPPIEST BIRTHDAY MAH....!</p>
+            </div>
+        </div>
+    </section>
+
+    <script src="sources/script.js"></script>
+</body>
+
+</html>
