@@ -61,21 +61,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Expose goBack to global scope
     window.goBack = function (fromPage) {
-        // Navigate to previous page
-        // Page 2 -> 1
-        // Page 3 -> 2 (reset state?)
-        // Page 4 -> 3
-        // Page 5 -> 4
-        // Depending on user intent, typically strictly sequential reverse.
-
         let targetPage = fromPage - 1;
-        if (targetPage < 1) targetPage = 1;
-        // Never go below page 1 (passcode page is one-way)
-        if (targetPage < 1) targetPage = 1;
 
-        // Special handling for undoing "Decoration" state if going back from 3 to 2? 
-        // Or if going back from 4 to 3? 
-        // For simplicity, just navigation.
+        if (fromPage === 2) targetPage = 'cake';
+        else if (fromPage === 'cake') targetPage = 1;
+
+        if (targetPage < 1 && targetPage !== 'cake') targetPage = 1;
+
         if (fromPage === 3) {
             document.body.classList.remove('bg-dark-purple');
             resetDecorationState();
@@ -91,8 +83,74 @@ document.addEventListener('DOMContentLoaded', () => {
     btnCelebration.addEventListener('click', () => {
         createConfetti();
         setTimeout(() => {
-            goToPage(2);
+            goToPage('cake'); // Modified from 2 to cake
         }, 800);
+    });
+
+    // --- Page Cake Logic ---
+    const btnStartMic = document.getElementById('btn-start-mic');
+    const micStatus = document.getElementById('mic-status');
+    const flame = document.getElementById('flame');
+    const btnCakeNext = document.getElementById('btn-cake-next');
+    let audioContext;
+    let microphone;
+    let analyser;
+
+    btnStartMic.addEventListener('click', async () => {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            analyser = audioContext.createAnalyser();
+            microphone = audioContext.createMediaStreamSource(stream);
+            
+            // ScriptProcessor is deprecated but widely supported. Good for simple volume checking.
+            const scriptProcessor = audioContext.createScriptProcessor(2048, 1, 1);
+
+            analyser.smoothingTimeConstant = 0.8;
+            analyser.fftSize = 1024;
+
+            microphone.connect(analyser);
+            analyser.connect(scriptProcessor);
+            scriptProcessor.connect(audioContext.destination);
+
+            micStatus.innerText = "Ready! Blow into your microphone! 💨";
+            btnStartMic.classList.add('hidden');
+
+            scriptProcessor.onaudioprocess = function() {
+                const array = new Uint8Array(analyser.frequencyBinCount);
+                analyser.getByteFrequencyData(array);
+                let values = 0;
+                const length = array.length;
+                for (let i = 0; i < length; i++) {
+                    values += (array[i]);
+                }
+                const average = values / length;
+
+                // Threshold for blowing air (usually high low-frequency noise)
+                if (average > 75) { 
+                    blowOutCandle();
+                    scriptProcessor.disconnect();
+                    microphone.disconnect();
+                    stream.getTracks().forEach(track => track.stop());
+                }
+            };
+        } catch (err) {
+            console.error(err);
+            micStatus.innerText = "Microphone access denied. You can just click continue!";
+            btnStartMic.classList.add('hidden');
+            btnCakeNext.classList.remove('hidden');
+        }
+    });
+
+    function blowOutCandle() {
+        flame.classList.add('blown-out');
+        micStatus.innerText = "Yay! You blew out the candle! 🎂✨";
+        btnCakeNext.classList.remove('hidden');
+        createConfetti();
+    }
+
+    btnCakeNext.addEventListener('click', () => {
+        goToPage(2);
     });
 
     // --- Page 2 Logic (The Box) ---
