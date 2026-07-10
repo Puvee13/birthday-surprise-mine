@@ -58,7 +58,7 @@ body {
     height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start; /* changed from center to allow scrolling on small devices without cutoff */
     align-items: center;
     text-align: center;
     opacity: 0;
@@ -1035,7 +1035,7 @@ button:hover {
    ======================================================== */
 .game-container {
     max-width: 900px;
-    margin: 0 auto;
+    margin: auto; /* changed from 0 auto to center vertically in flexbox */
     padding: 20px;
     display: flex;
     flex-direction: column;

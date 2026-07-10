@@ -95,55 +95,102 @@ document.addEventListener('DOMContentLoaded', () => {
     let audioContext;
     let microphone;
     let analyser;
+    let scriptProcessor;
+    let activeStream = null;
+    let candleBlown = false;
+
+    // Fallback: Tapping the cake or the flame will also blow out the candle
+    const cakeWrap = document.querySelector('.choco-cake-wrap');
+    if (cakeWrap) {
+        cakeWrap.style.cursor = 'pointer';
+        const triggerTapBlow = () => {
+            if (candleBlown) return;
+            blowOutCandle();
+            cleanupAudio();
+        };
+        cakeWrap.addEventListener('click', triggerTapBlow);
+        if (flame) flame.addEventListener('click', triggerTapBlow);
+    }
+
+    function cleanupAudio() {
+        try {
+            if (scriptProcessor) {
+                scriptProcessor.disconnect();
+            }
+            if (microphone) {
+                microphone.disconnect();
+            }
+            if (activeStream) {
+                activeStream.getTracks().forEach(track => track.stop());
+            }
+            if (audioContext && audioContext.state !== 'closed') {
+                audioContext.close();
+            }
+        } catch (e) {
+            console.error("Audio cleanup error:", e);
+        }
+    }
 
     btnStartMic.addEventListener('click', async () => {
         try {
+            // Standard constraints
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+            activeStream = stream;
+
+            // Handle iOS AudioContext suspension
             audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioContext.state === 'suspended') {
+                await audioContext.resume();
+            }
+
             analyser = audioContext.createAnalyser();
             microphone = audioContext.createMediaStreamSource(stream);
             
-            // ScriptProcessor is deprecated but widely supported. Good for simple volume checking.
-            const scriptProcessor = audioContext.createScriptProcessor(2048, 1, 1);
+            // ScriptProcessor chunking
+            scriptProcessor = audioContext.createScriptProcessor(2048, 1, 1);
 
-            analyser.smoothingTimeConstant = 0.8;
-            analyser.fftSize = 1024;
+            analyser.smoothingTimeConstant = 0.3; // faster response
+            analyser.fftSize = 512; // smaller fft size for faster processing
 
             microphone.connect(analyser);
             analyser.connect(scriptProcessor);
             scriptProcessor.connect(audioContext.destination);
 
-            micStatus.innerText = "Ready! Blow into your microphone! 💨";
+            micStatus.innerText = "Ready! Gently blow into your microphone! 💨 (Or tap the cake to blow it out!)";
             btnStartMic.classList.add('hidden');
 
             scriptProcessor.onaudioprocess = function() {
+                if (candleBlown) return;
                 const array = new Uint8Array(analyser.frequencyBinCount);
                 analyser.getByteFrequencyData(array);
-                let values = 0;
-                const length = array.length;
-                for (let i = 0; i < length; i++) {
-                    values += (array[i]);
-                }
-                const average = values / length;
 
-                // Threshold for blowing air (usually high low-frequency noise)
-                if (average > 75) { 
+                // Blow detection focuses on low frequencies (wind rumble, usually < 250Hz)
+                // 512 FFT size means 256 bins. At 44.1kHz, each bin is ~86Hz.
+                // Bins 0, 1, 2 represent the lowest frequencies (0Hz to 258Hz).
+                let lowFreqSum = 0;
+                const binRange = Math.min(3, array.length);
+                for (let i = 0; i < binRange; i++) {
+                    lowFreqSum += array[i];
+                }
+                const lowFreqAverage = lowFreqSum / binRange;
+
+                // Threshold: wind/blowing creates heavy low-end rumble (usually > 60-70)
+                if (lowFreqAverage > 65) { 
                     blowOutCandle();
-                    scriptProcessor.disconnect();
-                    microphone.disconnect();
-                    stream.getTracks().forEach(track => track.stop());
+                    cleanupAudio();
                 }
             };
         } catch (err) {
-            console.error(err);
-            micStatus.innerText = "Microphone access denied. You can just click continue!";
+            console.error("Microphone access failed:", err);
+            micStatus.innerText = "Mic error or blocked. Just tap the cake or click below to continue! 🥰";
             btnStartMic.classList.add('hidden');
             btnCakeNext.classList.remove('hidden');
         }
     });
 
     function blowOutCandle() {
-        flame.classList.add('blown-out');
+        candleBlown = true;
+        if (flame) flame.classList.add('blown-out');
         micStatus.innerText = "Yay! You blew out the candle! 🎂✨";
         btnCakeNext.classList.remove('hidden');
         createConfetti();
