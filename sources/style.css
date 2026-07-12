@@ -1246,4 +1246,30 @@ button:hover {
         width: 100%;
         justify-content: center;
     }
-}
+}
+
+/*New Frame*/
+
+.newframe {
+    background: white;
+    padding: 12px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+    transition: all 0.4s ease;
+}
+
+.newframe:hover {
+    transform: scale(1.05);
+    /* Reduced scale to prevent overflow issues */
+    z-index: 50;
+}
+
+.newframe img {
+    width: 100%;
+    height: 310px;
+    /* Fixed height to keep them small and uniform */
+    object-fit: cover;
+    /* Crop nicely */
+    display: block;
+    border-radius: 4px;
+}
