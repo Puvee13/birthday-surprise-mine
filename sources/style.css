@@ -1265,7 +1265,7 @@ button:hover {
 }
 
 .newframe img {
-    width: 85%;
+    width: 100%;
     height: 310px;
     /* Fixed height to keep them small and uniform */
     object-fit: cover;
