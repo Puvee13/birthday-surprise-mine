@@ -1254,7 +1254,7 @@ button:hover {
     background: white;
     padding: 12px;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-    border-radius: 4px;
+    border-radius: 1.3px;
     transition: all 0.4s ease;
 }
 
